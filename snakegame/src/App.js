@@ -1,6 +1,6 @@
 import React,{ Component } from "react";
 import Snake from "./Snake";
-import Food from "./Button";
+import Food from "./Food";
 import Menu from "./Menu";
 import Button from "./Button";
 
@@ -216,12 +216,15 @@ class App extends Component {
               <Snake snakeDots={snakeDots} />
               <Food dot={food} />
             </div>
+            {/* Conditionally render buttons only when game is being played */}
+            {route === "game" && (
             <Button
               onDown={this.onDown}
               onLeft={this.onLeft}
               onRight={this.onRight}
               onUp={this.onUp}
             />
+            )}
             </div>  
         )}
       </div>
