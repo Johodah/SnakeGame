@@ -1,0 +1,37 @@
+.upwards,
+.downwards {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+}
+
+.sideways {
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+    align-items: center;
+}
+
+.left,
+.right {
+    margin: 50px;
+    padding: 20px;
+    border: 0px solid;
+    border-radius: 20px;
+    border: 1px solid white;
+    color: red;
+    background: black;
+    box-shadow: 5px -5px 10px black;
+}
+
+.up,
+.down {
+    padding: 20px;
+    border: 0px solid;
+    border-radius: 20px;
+    border: 1px solid white;
+    color: red;
+    background: black;
+    box-shadow: 5px -5px 10px black;
+}
