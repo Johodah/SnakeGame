@@ -4,6 +4,10 @@ import Food from "./Food";
 import Menu from "./Menu";
 import Button from "./Button";
 import Settings from "./Settings";
+import "./Settings.css";
+import "./App.css";
+import "./index.css";
+
 
 const getRandomFood = () => {
   let min = 1;
@@ -26,9 +30,11 @@ class App extends Component {
     super();
     this.state = {
       ...initialState,
-      darkMode: false,
+      lightMode: false,
       useWASD: false
     };
+
+    this.onKeyDown = this.onKeyDown.bind(this);
   }
 
   componentDidMount() {
@@ -48,23 +54,39 @@ class App extends Component {
 
   onKeyDown = (e) => {
     e = e || window.Event;
+    const { direction } = this.state;
+    let newDirection;
+  
     switch (e.keyCode) {
       case 37:
-        this.setState({ direction: "LEFT" });
+        newDirection = "LEFT";
         break;
       case 38:
-        this.setState({ direction: "UP" });
+        newDirection = "UP";
         break;
       case 39:
-        this.setState({ direction: "RIGHT" });
+        newDirection = "RIGHT";
         break;
       case 40:
-        this.setState({ direction: "DOWN" });
+        newDirection = "DOWN";
         break;
       default:
-        break;
+        return;
     }
+  
+    // Check if the new direction is opposite to the current direction
+    if (
+      (direction === "LEFT" && newDirection === "RIGHT") ||
+      (direction === "RIGHT" && newDirection === "LEFT") ||
+      (direction === "UP" && newDirection === "DOWN") ||
+      (direction === "DOWN" && newDirection === "UP")
+    ) {
+      return;
+    }
+  
+    this.setState({ direction: newDirection });
   };
+  
 
   moveSnake = () => {
     let dots = [...this.state.snakeDots];
@@ -144,6 +166,7 @@ class App extends Component {
 
   onRouteChange = () => {
     this.setState({
+      ...initialState,
       route: "game"
     });
   };
@@ -152,8 +175,11 @@ class App extends Component {
     const score = this.state.snakeDots.length - 2;
     window.alert(`GAME OVER! Your score is ${score}`);
     clearInterval(this.moveInterval);
-    this.setState(initialState);
-  };
+    this.setState({
+      ...initialState,
+      route: "menu",
+    });
+    };
 
   onDown = () => {
     let dots = [...this.state.snakeDots];
@@ -207,9 +233,9 @@ class App extends Component {
     });
   };
 
-  toggleDarkMode = () => {
+  toggleLightMode = () => {
     this.setState((prevState) => ({
-      darkMode: !prevState.darkMode
+      lightMode: !prevState.lightMode
     }));
   };
 
@@ -220,20 +246,27 @@ class App extends Component {
   };
 
   render() {
-    const { route, snakeDots, food, darkMode, useWASD } = this.state;
+    const { route, snakeDots, food, lightMode, useWASD } = this.state;
+
     return (
-      <div>
+      <div className={lightMode ? 'light-mode' : ''}>
         {route === "menu" ? (
           <div>
             <Menu onRouteChange={this.onRouteChange} />
           </div>
         ) : (
           <div>
-            <div className={darkMode ? "dark-game-area" : "game-area"}>
+            <Settings
+              lightMode={lightMode}
+              onToggleLightMode={this.toggleLightMode}
+              onToggleArrowKeys={this.toggleArrowKeys}
+            />
+
+            <div className="game-area">
               <Snake snakeDots={snakeDots} />
               <Food dot={food} />
             </div>
-            {/* Conditionally render buttons only when the game is being played */}
+
             {route === "game" && (
               <Button
                 onDown={this.onDown}
@@ -243,17 +276,11 @@ class App extends Component {
                 isVisible={!useWASD}
               />
             )}
-            {/* Add the Settings component */}
-            <Settings
-              darkMode={darkMode}
-              onToggleDarkMode={this.toggleDarkMode}
-              onToggleArrowKeys={this.toggleArrowKeys}
-            />
           </div>
         )}
       </div>
     );
   }
 }
-
+  
 export default App;

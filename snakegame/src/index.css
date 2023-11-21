@@ -8,6 +8,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.light-mode body {
+  background-color: white;
+  color: black;
+}
+
 .game-area {
   position: relative;
   width: 600px;
@@ -17,20 +22,11 @@ body {
   margin: 50px auto;
   display: flex;
   flex-wrap: wrap;
-  box-shadow: 0 0 10px white;
+  box-shadow: 0 0 10px black;
 }
 
-@media only screen and (max-width: 800px) {
-  .game-area {
-    position: relative;
-    width: 350px;
-    height: 300px;
-  }
-
-  .snake {
-    width: 12px;
-    height: 12px;
-  }
+.game-area.light-mode {
+  box-shadow: 0 0 10px white;
 }
 
 .snake {
@@ -51,6 +47,18 @@ body {
   z-index: 1;
 }
 
+@media only screen and (max-width: 800px) {
+  .game-area {
+    position: relative;
+    width: 350px;
+    height: 300px;
+  }
+
+  .snake {
+    width: 12px;
+    height: 12px;
+  }
+}
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',

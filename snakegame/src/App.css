@@ -2,9 +2,9 @@
   text-align: center;
 }
 
-.dark-game-area {
-  background-color: aqua;
-  color: #fff;
+.light-game-area {
+  background-color: white;
+  color: white;
 }
 
 .App-header {
@@ -22,11 +22,4 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+
