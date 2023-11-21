@@ -1,8 +1,9 @@
-import React,{ Component } from "react";
+import React, { Component } from "react";
 import Snake from "./Snake";
 import Food from "./Food";
 import Menu from "./Menu";
 import Button from "./Button";
+import Settings from "./Settings";
 
 const getRandomFood = () => {
   let min = 1;
@@ -23,7 +24,11 @@ const initialState = {
 class App extends Component {
   constructor() {
     super();
-    this.state = initialState;
+    this.state = {
+      ...initialState,
+      darkMode: false,
+      useWASD: false
+    };
   }
 
   componentDidMount() {
@@ -31,21 +36,21 @@ class App extends Component {
     document.onkeydown = this.onKeyDown;
   }
 
-  conponentWillUnmount() {
+  componentWillUnmount() {
     clearInterval(this.moveInterval);
   }
 
   componentDidUpdate() {
     this.onSnakeOutOfBounds();
-    this.onSnakeCOllapsed();
+    this.onSnakeCollapsed();  // Fixed typo here
     this.onSnakeEats();
   }
 
-  onKeyDown = e => {
+  onKeyDown = (e) => {
     e = e || window.Event;
     switch (e.keyCode) {
       case 37:
-        this.setState({ direction: "LEFT"});
+        this.setState({ direction: "LEFT" });
         break;
       case 38:
         this.setState({ direction: "UP" });
@@ -56,7 +61,7 @@ class App extends Component {
       case 40:
         this.setState({ direction: "DOWN" });
         break;
-        default:
+      default:
         break;
     }
   };
@@ -78,8 +83,8 @@ class App extends Component {
         case "DOWN":
           head = [head[0], head[1] + 2];
           break;
-          default:
-            break;      
+        default:
+          break;
       }
       dots.push(head);
       dots.shift();
@@ -89,27 +94,27 @@ class App extends Component {
     }
   };
 
-  onSnakeOutOfBounds(){
+  onSnakeOutOfBounds = () => {
     let head = this.state.snakeDots[this.state.snakeDots.length - 1];
     if (this.state.route === "game") {
       if (head[0] >= 100 || head[1] >= 100 || head[0] < 0 || head[1] < 0) {
         this.gameOver();
       }
     }
-  }
+  };
 
-  onSnakeCOllapsed(){
+  onSnakeCollapsed = () => {
     let snake = [...this.state.snakeDots];
     let head = snake[snake.length - 1];
     snake.pop();
-    snake.forEach(dot => {
+    snake.forEach((dot) => {
       if (head[0] === dot[0] && head[1] === dot[1]) {
         this.gameOver();
       }
     });
-  }
+  };
 
-  onSnakeEats() {
+  onSnakeEats = () => {
     let head = this.state.snakeDots[this.state.snakeDots.length - 1];
     let food = this.state.food;
     if (head[0] === food[0] && head[1] === food[1]) {
@@ -119,23 +124,23 @@ class App extends Component {
       this.increaseSnake();
       this.increaseSpeed();
     }
-  }
+  };
 
-  increaseSnake() {
+  increaseSnake = () => {
     let newSnake = [...this.state.snakeDots];
     newSnake.unshift([]);
     this.setState({
       snakeDots: newSnake
     });
-  }
+  };
 
-  increaseSpeed() {
+  increaseSpeed = () => {
     if (this.state.speed > 10) {
       this.setState({
         speed: this.state.speed - 20
       });
     }
-  }
+  };
 
   onRouteChange = () => {
     this.setState({
@@ -143,12 +148,12 @@ class App extends Component {
     });
   };
 
-  gameOver() {
+  gameOver = () => {
     const score = this.state.snakeDots.length - 2;
     window.alert(`GAME OVER! Your score is ${score}`);
     clearInterval(this.moveInterval);
-    this.setState(initialState);  
-  }
+    this.setState(initialState);
+  };
 
   onDown = () => {
     let dots = [...this.state.snakeDots];
@@ -202,8 +207,20 @@ class App extends Component {
     });
   };
 
+  toggleDarkMode = () => {
+    this.setState((prevState) => ({
+      darkMode: !prevState.darkMode
+    }));
+  };
+
+  toggleArrowKeys = () => {
+    this.setState((prevState) => ({
+      useWASD: !prevState.useWASD
+    }));
+  };
+
   render() {
-    const { route, snakeDots, food } = this.state;
+    const { route, snakeDots, food, darkMode, useWASD } = this.state;
     return (
       <div>
         {route === "menu" ? (
@@ -212,20 +229,27 @@ class App extends Component {
           </div>
         ) : (
           <div>
-            <div className="game-area">
+            <div className={darkMode ? "dark-game-area" : "game-area"}>
               <Snake snakeDots={snakeDots} />
               <Food dot={food} />
             </div>
-            {/* Conditionally render buttons only when game is being played */}
+            {/* Conditionally render buttons only when the game is being played */}
             {route === "game" && (
-            <Button
-              onDown={this.onDown}
-              onLeft={this.onLeft}
-              onRight={this.onRight}
-              onUp={this.onUp}
-            />
+              <Button
+                onDown={this.onDown}
+                onLeft={this.onLeft}
+                onRight={this.onRight}
+                onUp={this.onUp}
+                isVisible={!useWASD}
+              />
             )}
-            </div>  
+            {/* Add the Settings component */}
+            <Settings
+              darkMode={darkMode}
+              onToggleDarkMode={this.toggleDarkMode}
+              onToggleArrowKeys={this.toggleArrowKeys}
+            />
+          </div>
         )}
       </div>
     );
