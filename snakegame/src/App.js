@@ -1,35 +1,10 @@
-// import logo from './logo.svg';
-// import './App.css';
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
-
-// export default App;
-
 import React, { Component } from "react";
 import Snake from "./Snake";
 import Food from "./Food";
 import Button from "./Button";
 import Menu from "./menu";
-import HighScore from "./HighScore"
+import Popsup from "./Popup";
+
 
 const getRandomFood = () => {
   let min = 1;
@@ -48,8 +23,9 @@ const initialState = {
     [0, 0],
     [0, 2],
   ],
-  score: 0,
-  HighScore: 0,
+  score:0
+
+  
 };
 
 class App extends Component {
@@ -142,23 +118,17 @@ class App extends Component {
       });
       this.increaseSnake();
       this.increaseSpeed();
-      this.ScoreCounting();
+      this.setState((prevState) => {
+        let newScore = prevState.score + 10;
+        if (newScore >= 100) {
+          newScore -= 5;
+        }
+        localStorage.setItem("score", newScore);
+        return {
+          score: newScore,
+        };
+      });
     }
-  }
-  ScoreCounting() {
-    this.setState((prevState) => {
-      let newScore =
-        prevState.score +
-        10; /* räkna och spara score. Vi valde att spara score i localStorage så vi kan använda den till och visa high Score  */
-
-      if (newScore >= 100) {
-        newScore -= 5;
-      }
-      localStorage.setItem("score", newScore);
-      return {
-        score: newScore,
-      };
-    });
   }
   increaseSnake() {
     let newSnake = [...this.state.snakeDots];
@@ -181,12 +151,14 @@ class App extends Component {
       route: "game",
     });
   };
-
   gameOver() {
-    HighScore();
-    alert(`GAME OVER, your score is ${this.state.score}`);
-    this.setState(initialState);
+    this.setState({
+      route: "popup",
+      popupScore: this.state.score, // Använd den befintliga poängen
+    });
   }
+  /** ny function för att skicka in username till popup  */
+  
 
   onDown = () => {
     let dots = [...this.state.snakeDots];
@@ -240,14 +212,15 @@ class App extends Component {
   };
 
   render() {
-    const { route, snakeDots, food , score } = this.state;
+    const { route, snakeDots, food } = this.state;
     return (
       <div>
-        {route === "menu" ? (
-          <div>
-            <Menu onRouteChange={this.onRouteChange} />
-          </div>
-        ) : (
+      {route === "menu" ? (
+        <Menu onRouteChange={this.onRouteChange} />
+      ) : route === "popup" ? (
+        <Popsup score= {this.state.popupScore}>
+        </Popsup>
+      ) : (
           <div>
             <div className="game-area">
               <Snake snakeDots={snakeDots} />
@@ -262,7 +235,6 @@ class App extends Component {
           </div>
         )}
         <div>
-          <HighScore score={this.user_name} />
         </div>
       </div>
       
