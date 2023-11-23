@@ -1,10 +1,7 @@
 import React from "react";
 import "./Button.css";
 
-const Button = ({ onUp, onDown, onLeft, onRight, isVisible }) => {
-  if (!isVisible) {
-    return null;
-  }
+const Button = ({ onUp, onDown, onLeft, onRight }) => {
   
   return (
     <div className="buttons">

@@ -1,13 +1,8 @@
 import React, { Component } from "react";
 import Snake from "./Snake";
 import Food from "./Food";
-import Menu from "./Menu";
 import Button from "./Button";
-import Settings from "./Settings";
-import "./Settings.css";
-import "./App.css";
-import "./index.css";
-
+import Menu from "./Menu";
 
 const getRandomFood = () => {
   let min = 1;
@@ -28,65 +23,39 @@ const initialState = {
 class App extends Component {
   constructor() {
     super();
-    this.state = {
-      ...initialState,
-      lightMode: false,
-      useWASD: false
-    };
-
-    this.onKeyDown = this.onKeyDown.bind(this);
+    this.state = initialState;
   }
 
   componentDidMount() {
-    this.moveInterval = setInterval(this.moveSnake, this.state.speed);
+    setInterval(this.moveSnake, this.state.speed);
     document.onkeydown = this.onKeyDown;
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.moveInterval);
   }
 
   componentDidUpdate() {
     this.onSnakeOutOfBounds();
-    this.onSnakeCollapsed();  // Fixed typo here
+    this.onSnakeCollapsed();
     this.onSnakeEats();
   }
 
-  onKeyDown = (e) => {
-    e = e || window.Event;
-    const { direction } = this.state;
-    let newDirection;
-  
+  onKeyDown = e => {
+    e = e || window.event;
     switch (e.keyCode) {
       case 37:
-        newDirection = "LEFT";
+        this.setState({ direction: "LEFT" });
         break;
       case 38:
-        newDirection = "UP";
+        this.setState({ direction: "UP" });
         break;
       case 39:
-        newDirection = "RIGHT";
+        this.setState({ direction: "RIGHT" });
         break;
       case 40:
-        newDirection = "DOWN";
+        this.setState({ direction: "DOWN" });
         break;
       default:
-        return;
+        break;
     }
-  
-    // Check if the new direction is opposite to the current direction
-    if (
-      (direction === "LEFT" && newDirection === "RIGHT") ||
-      (direction === "RIGHT" && newDirection === "LEFT") ||
-      (direction === "UP" && newDirection === "DOWN") ||
-      (direction === "DOWN" && newDirection === "UP")
-    ) {
-      return;
-    }
-  
-    this.setState({ direction: newDirection });
   };
-  
 
   moveSnake = () => {
     let dots = [...this.state.snakeDots];
@@ -99,14 +68,14 @@ class App extends Component {
         case "LEFT":
           head = [head[0] - 2, head[1]];
           break;
-        case "UP":
-          head = [head[0], head[1] - 2];
-          break;
         case "DOWN":
           head = [head[0], head[1] + 2];
           break;
-        default:
+        case "UP":
+          head = [head[0], head[1] - 2];
           break;
+        default: 
+        break;  
       }
       dots.push(head);
       dots.shift();
@@ -116,27 +85,27 @@ class App extends Component {
     }
   };
 
-  onSnakeOutOfBounds = () => {
+  onSnakeOutOfBounds() {
     let head = this.state.snakeDots[this.state.snakeDots.length - 1];
     if (this.state.route === "game") {
       if (head[0] >= 100 || head[1] >= 100 || head[0] < 0 || head[1] < 0) {
         this.gameOver();
       }
     }
-  };
+  }
 
-  onSnakeCollapsed = () => {
+  onSnakeCollapsed() {
     let snake = [...this.state.snakeDots];
     let head = snake[snake.length - 1];
     snake.pop();
-    snake.forEach((dot) => {
+    snake.forEach(dot => {
       if (head[0] === dot[0] && head[1] === dot[1]) {
         this.gameOver();
       }
     });
-  };
+  }
 
-  onSnakeEats = () => {
+  onSnakeEats() {
     let head = this.state.snakeDots[this.state.snakeDots.length - 1];
     let food = this.state.food;
     if (head[0] === food[0] && head[1] === food[1]) {
@@ -146,40 +115,34 @@ class App extends Component {
       this.increaseSnake();
       this.increaseSpeed();
     }
-  };
+  }
 
-  increaseSnake = () => {
+  increaseSnake() {
     let newSnake = [...this.state.snakeDots];
     newSnake.unshift([]);
     this.setState({
       snakeDots: newSnake
     });
-  };
+  }
 
-  increaseSpeed = () => {
+  increaseSpeed() {
     if (this.state.speed > 10) {
       this.setState({
         speed: this.state.speed - 20
       });
     }
-  };
+  }
 
   onRouteChange = () => {
     this.setState({
-      ...initialState,
       route: "game"
     });
   };
 
-  gameOver = () => {
-    const score = this.state.snakeDots.length - 2;
-    window.alert(`GAME OVER! Your score is ${score}`);
-    clearInterval(this.moveInterval);
-    this.setState({
-      ...initialState,
-      route: "menu",
-    });
-    };
+  gameOver() {
+    alert(`GAME OVER, your score is ${this.state.snakeDots.length - 2}`);
+    this.setState(initialState);
+  }
 
   onDown = () => {
     let dots = [...this.state.snakeDots];
@@ -233,54 +196,31 @@ class App extends Component {
     });
   };
 
-  toggleLightMode = () => {
-    this.setState((prevState) => ({
-      lightMode: !prevState.lightMode
-    }));
-  };
-
-  toggleArrowKeys = () => {
-    this.setState((prevState) => ({
-      useWASD: !prevState.useWASD
-    }));
-  };
-
   render() {
-    const { route, snakeDots, food, lightMode, useWASD } = this.state;
-
+    const { route, snakeDots, food } = this.state;
     return (
-      <div className={lightMode ? 'light-mode' : ''}>
+      <div>
         {route === "menu" ? (
           <div>
             <Menu onRouteChange={this.onRouteChange} />
           </div>
         ) : (
           <div>
-            <Settings
-              lightMode={lightMode}
-              onToggleLightMode={this.toggleLightMode}
-              onToggleArrowKeys={this.toggleArrowKeys}
-            />
-
             <div className="game-area">
               <Snake snakeDots={snakeDots} />
               <Food dot={food} />
             </div>
-
-            {route === "game" && (
-              <Button
-                onDown={this.onDown}
-                onLeft={this.onLeft}
-                onRight={this.onRight}
-                onUp={this.onUp}
-                isVisible={!useWASD}
-              />
-            )}
+            <Button
+              onDown={this.onDown}
+              onLeft={this.onLeft}
+              onRight={this.onRight}
+              onUp={this.onUp}
+            />
           </div>
         )}
       </div>
     );
   }
 }
-  
+
 export default App;
