@@ -27,6 +27,8 @@ body {
 
 .game-area.light-mode {
   box-shadow: 0 0 10px white;
+  border: 2px solid black;
+  background-color: white;
 }
 
 .snake {
@@ -38,6 +40,11 @@ body {
   z-index: 2;
 }
 
+.snake.light-mode {
+  background-color: black;
+  border: 1px solid black;
+}
+
 .food {
   position: absolute;
   width: 12px;
@@ -45,6 +52,11 @@ body {
   background-color: white;
   border-radius: 20px;
   z-index: 1;
+}
+
+.food.light-mode {
+  background-color: orange;
+  color: black;
 }
 
 @media only screen and (max-width: 800px) {

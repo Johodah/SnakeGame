@@ -17,7 +17,8 @@ const initialState = {
   direction: "RIGHT",
   speed: 100,
   route: "menu",
-  snakeDots: [[0, 0], [0, 2]]
+  snakeDots: [[0, 0], [0, 2]],
+  lightMode: false,
 };
 
 class App extends Component {
@@ -196,19 +197,25 @@ class App extends Component {
     });
   };
 
+  toggleLightMode = () => {
+    this.setState((prevState) => ({
+      lightMode: !prevState.lightMode,
+    }));
+  };
+
   render() {
-    const { route, snakeDots, food } = this.state;
+    const { route, snakeDots, food, lightMode } = this.state;
     return (
-      <div>
+      <div className={lightMode ? "light-mode" : ""}>
         {route === "menu" ? (
           <div>
             <Menu onRouteChange={this.onRouteChange} />
           </div>
         ) : (
           <div>
-            <div className="game-area">
-              <Snake snakeDots={snakeDots} />
-              <Food dot={food} />
+            <div className={`game-area ${lightMode ? "light-mode" : ""}`}>
+              <Snake snakeDots={snakeDots} lightMode={lightMode} />
+              <Food dot={food} lightMode={lightMode} />
             </div>
             <Button
               onDown={this.onDown}
@@ -216,6 +223,9 @@ class App extends Component {
               onRight={this.onRight}
               onUp={this.onUp}
             />
+            <button onClick={this.toggleLightMode}>
+              Toggle Light Mode
+            </button>
           </div>
         )}
       </div>
