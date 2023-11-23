@@ -6,16 +6,17 @@ import StartButton from './Startknapp';
 import ExitButton from './Exitknapp';
 
 function App() {
-  return (
-    <div className="App">
-      
-      <Homepage/>
+  return (      
+    <main className= "main">
+  <Homepage/>
+    <div className="Menu">
       <div id="buttons">
       <StartButton></StartButton>
       <Highscore/>
       <ExitButton></ExitButton>
       </div>
     </div>
+    </main>
   );
 }
 
