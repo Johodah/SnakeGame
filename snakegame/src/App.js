@@ -47,6 +47,11 @@ class App extends Component {
   componentDidMount() {
     setInterval(this.moveSnake, this.state.speed);
     document.onkeydown = this.onKeyDown;
+    document.addEventListener("keydown", this.handleKeyPress);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.handleKeyPress);
   }
 
   componentDidUpdate() {
@@ -108,6 +113,15 @@ class App extends Component {
         break;
       default:
         break;
+    }
+  };
+
+  handleKeyPress = (e) => {
+    e = e || window.event;
+    const { route } = this.state;
+
+    if (e.keyCode === 27) {
+      this.togglePause();
     }
   };
 
@@ -280,31 +294,55 @@ class App extends Component {
     );
   };
 
+  togglePause = () => {
+    if (this.state.route === "game") {
+      this.setState({
+        route: "paused",
+      });
+    } else if (this.state.route === "paused") {
+      this.setState({
+        route: "game",
+      });
+    }
+  };
+
   render() {
     const { route, snakeDots, food, lightMode, controlScheme } = this.state;
-    const lightModeClass = lightMode ? "light-mode" : "";
-    const buttonClass = lightMode ? "light-mode-button" : "";
-    const controlButtonClass = controlScheme === "arrows" ? "arrows" : "wasd";
-  
+    const LightMode = lightMode;
+    const ControlButton = controlScheme === "arrows" || controlScheme === "wasd";
+    const GamePaused = route === "menu" || route === "paused";
+
     return (
-      <div className={lightModeClass}>
+      <div className={LightMode ? "light-mode" : ""}>
         <button
-          className={buttonClass}
+          className={`toggle-light-mode-button ${LightMode ? "light-mode-button" : ""}`}
           onClick={this.toggleLightMode}
-        >Toggle Light Mode
+        >
+          Toggle Light Mode
         </button>
-        <button className={`control-button ${controlButtonClass}`} onClick={this.toggleControlScheme}>
+
+        <button
+          className={`control-button ${ControlButton ? "" : "light-mode-button"}`} 
+          onClick={this.toggleControlScheme}
+          >
           {controlScheme === "arrows" ? "Arrow Keys" : "WASD"}
         </button>
+
+        <button className={`toggle-pause-button ${GamePaused && route === "game" ?  "light-mode-button" : ""}`} 
+          onClick={this.togglePause}
+          >
+          {route === "game" ? "Pause" : "Resume"}
+        </button>
+
         {route === "menu" ? (
           <div>
             <Menu onRouteChange={this.onRouteChange} />
           </div>
         ) : (
           <div>
-            <div className={`game-area ${lightModeClass}`}>
-              <Snake snakeDots={snakeDots} lightMode={lightMode} />
-              <Food dot={food} lightMode={lightMode} />
+            <div className={`game-area ${LightMode ? "light-mode" : ""}`}>
+              <Snake snakeDots={snakeDots} lightMode={LightMode} />
+              <Food dot={food} lightMode={LightMode} />
             </div>
             <Button
               onDown={this.onDown}
@@ -318,4 +356,5 @@ class App extends Component {
     );
   }
 }
+
 export default App;  
