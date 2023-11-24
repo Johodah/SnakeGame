@@ -118,12 +118,31 @@ class App extends Component {
 
   handleKeyPress = (e) => {
     e = e || window.event;
-    const { route } = this.state;
+    const { route, controlScheme } = this.state;
 
     if (e.keyCode === 27) {
       this.togglePause();
     }
-  };
+  
+
+  if (e.key === 'l' || e.key === 'L') {
+    this.toggleLightMode();
+  }
+
+  const validControlKeys = ['w', 'a', 's', 'd', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'ArrowDown'];
+  
+  if (validControlKeys.includes(e.key)) {
+    const isOppositeControlScheme = 
+      (controlScheme === 'arrows' && validControlKeys.slice(0, 4).includes(e.key.toLowerCase())) ||
+      (controlScheme === 'wasd' && validControlKeys.slice(4).includes(e.key))
+    
+    
+    if (isOppositeControlScheme) {
+      this.toggleControlScheme();
+    } 
+  }
+};
+
 
   moveSnake = () => {
     let dots = [...this.state.snakeDots];
