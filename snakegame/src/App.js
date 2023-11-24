@@ -12,19 +12,26 @@ const getRandomFood = () => {
   return [x, y];
 };
 
-const initialState = {
-  food: getRandomFood(),
-  direction: "RIGHT",
-  speed: 100,
-  route: "menu",
-  snakeDots: [[0, 0], [0, 2]],
-  lightMode: false,
-};
-
 class App extends Component {
+  loadLightModePref = () => {
+    const storedPreference = localStorage.getItem("lightMode");
+    return storedPreference ? JSON.parse(storedPreference) : false;
+  };
+
+  saveLightModePref = (isLightMode) => {
+    localStorage.setItem("lightMode", JSON.stringify(isLightMode));
+  };
+
   constructor() {
     super();
-    this.state = initialState;
+    this.state = {
+      food: getRandomFood(),
+      direction: "RIGHT",
+      speed: 100,
+      route: "menu",
+      snakeDots: [[0, 0], [0, 2]],
+      lightMode: this.loadLightModePref(),
+    };
   }
 
   componentDidMount() {
@@ -38,7 +45,7 @@ class App extends Component {
     this.onSnakeEats();
   }
 
-  onKeyDown = e => {
+  onKeyDown = (e) => {
     e = e || window.event;
     switch (e.keyCode) {
       case 37:
@@ -75,13 +82,13 @@ class App extends Component {
         case "UP":
           head = [head[0], head[1] - 2];
           break;
-        default: 
-        break;  
+        default:
+          break;
       }
       dots.push(head);
       dots.shift();
       this.setState({
-        snakeDots: dots
+        snakeDots: dots,
       });
     }
   };
@@ -99,7 +106,7 @@ class App extends Component {
     let snake = [...this.state.snakeDots];
     let head = snake[snake.length - 1];
     snake.pop();
-    snake.forEach(dot => {
+    snake.forEach((dot) => {
       if (head[0] === dot[0] && head[1] === dot[1]) {
         this.gameOver();
       }
@@ -111,7 +118,7 @@ class App extends Component {
     let food = this.state.food;
     if (head[0] === food[0] && head[1] === food[1]) {
       this.setState({
-        food: getRandomFood()
+        food: getRandomFood(),
       });
       this.increaseSnake();
       this.increaseSpeed();
@@ -122,27 +129,34 @@ class App extends Component {
     let newSnake = [...this.state.snakeDots];
     newSnake.unshift([]);
     this.setState({
-      snakeDots: newSnake
+      snakeDots: newSnake,
     });
   }
 
   increaseSpeed() {
     if (this.state.speed > 10) {
       this.setState({
-        speed: this.state.speed - 20
+        speed: this.state.speed - 20,
       });
     }
   }
 
   onRouteChange = () => {
     this.setState({
-      route: "game"
+      route: "game",
     });
   };
 
   gameOver() {
     alert(`GAME OVER, your score is ${this.state.snakeDots.length - 2}`);
-    this.setState(initialState);
+    this.setState({
+      food: getRandomFood(),
+      direction: "RIGHT",
+      speed: 100,
+      route: "menu",
+      snakeDots: [[0, 0], [0, 2]],
+      lightMode: this.loadLightModePref(),
+    });
   }
 
   onDown = () => {
@@ -154,7 +168,7 @@ class App extends Component {
     dots.shift();
     this.setState({
       direction: "DOWN",
-      snakeDots: dots
+      snakeDots: dots,
     });
   };
 
@@ -167,7 +181,7 @@ class App extends Component {
     dots.shift();
     this.setState({
       direction: "UP",
-      snakeDots: dots
+      snakeDots: dots,
     });
   };
 
@@ -180,7 +194,7 @@ class App extends Component {
     dots.shift();
     this.setState({
       direction: "RIGHT",
-      snakeDots: dots
+      snakeDots: dots,
     });
   };
 
@@ -193,14 +207,19 @@ class App extends Component {
     dots.shift();
     this.setState({
       direction: "LEFT",
-      snakeDots: dots
+      snakeDots: dots,
     });
   };
 
   toggleLightMode = () => {
-    this.setState((prevState) => ({
-      lightMode: !prevState.lightMode,
-    }));
+    this.setState(
+      (prevState) => ({
+        lightMode: !prevState.lightMode,
+      }),
+      () => {
+        this.saveLightModePref(this.state.lightMode);
+      }
+    );
   };
 
   render() {
@@ -223,14 +242,12 @@ class App extends Component {
               onRight={this.onRight}
               onUp={this.onUp}
             />
-            <button onClick={this.toggleLightMode}>
-              Toggle Light Mode
-            </button>
+            <button onClick={this.toggleLightMode}>Toggle Light Mode</button>
           </div>
-        )}
-      </div>
-    );
-  }
-}
-
-export default App;
+          )}
+          </div>
+        );
+      }
+    }
+    
+    export default App;
