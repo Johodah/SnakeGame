@@ -22,6 +22,15 @@ class App extends Component {
     localStorage.setItem("lightMode", JSON.stringify(isLightMode));
   };
 
+  loadControls = () => {
+    const storedPreference = localStorage.getItem("controlScheme");
+    return storedPreference || "arrows";
+  };
+
+  saveControls = (controlScheme) => {
+    localStorage.setItem("controlScheme", controlScheme);
+  };
+
   constructor() {
     super();
     this.state = {
@@ -31,6 +40,7 @@ class App extends Component {
       route: "menu",
       snakeDots: [[0, 0], [0, 2]],
       lightMode: this.loadLightModePref(),
+      controlScheme: this.loadControls(),
     };
   }
 
@@ -47,6 +57,22 @@ class App extends Component {
 
   onKeyDown = (e) => {
     e = e || window.event;
+    const { controlScheme } = this.state;
+
+    switch (controlScheme) {
+      case "arrows":
+        this.handleArrowKeys(e);
+        break;
+      case "wasd":
+        this.handleWASDKeys(e);
+        break;
+      default:
+        break;    
+    }
+  };
+
+  handleArrowKeys = (e) => {
+    e = e || window.event;
     switch (e.keyCode) {
       case 37:
         this.setState({ direction: "LEFT" });
@@ -58,6 +84,26 @@ class App extends Component {
         this.setState({ direction: "RIGHT" });
         break;
       case 40:
+        this.setState({ direction: "DOWN" });
+        break;
+      default:
+        break;
+    }
+  };
+
+  handleWASDKeys = (e) => {
+    e = e || window.event;
+    switch (e.keyCode) {
+      case 65:
+        this.setState({ direction: "LEFT" });
+        break;
+      case 87:
+        this.setState({ direction: "UP" });
+        break;
+      case 68:
+        this.setState({ direction: "RIGHT" });
+        break;
+      case 83:
         this.setState({ direction: "DOWN" });
         break;
       default:
@@ -222,10 +268,23 @@ class App extends Component {
     );
   };
 
+  toggleControlScheme = () => {
+    const newScheme = this.state.controlScheme === "arrows" ? "wasd" : "arrows";
+    this.setState(
+      {
+        controlScheme: newScheme,
+      },
+      () => {
+        this.saveControls(newScheme);
+      }
+    );
+  };
+
   render() {
-    const { route, snakeDots, food, lightMode } = this.state;
+    const { route, snakeDots, food, lightMode, controlScheme } = this.state;
     const lightModeClass = lightMode ? "light-mode" : "";
     const buttonClass = lightMode ? "light-mode-button" : "";
+    const controlButtonClass = controlScheme === "arrows" ? "arrows" : "wasd";
   
     return (
       <div className={lightModeClass}>
@@ -233,6 +292,9 @@ class App extends Component {
           className={buttonClass}
           onClick={this.toggleLightMode}
         >Toggle Light Mode
+        </button>
+        <button className={`control-button ${controlButtonClass}`} onClick={this.toggleControlScheme}>
+          {controlScheme === "arrows" ? "Arrow Keys" : "WASD"}
         </button>
         {route === "menu" ? (
           <div>
