@@ -224,15 +224,23 @@ class App extends Component {
 
   render() {
     const { route, snakeDots, food, lightMode } = this.state;
+    const lightModeClass = lightMode ? "light-mode" : "";
+    const buttonClass = lightMode ? "light-mode-button" : "";
+  
     return (
-      <div className={lightMode ? "light-mode" : ""}>
+      <div className={lightModeClass}>
+        <button
+          className={buttonClass}
+          onClick={this.toggleLightMode}
+        >Toggle Light Mode
+        </button>
         {route === "menu" ? (
           <div>
             <Menu onRouteChange={this.onRouteChange} />
           </div>
         ) : (
           <div>
-            <div className={`game-area ${lightMode ? "light-mode" : ""}`}>
+            <div className={`game-area ${lightModeClass}`}>
               <Snake snakeDots={snakeDots} lightMode={lightMode} />
               <Food dot={food} lightMode={lightMode} />
             </div>
@@ -242,12 +250,10 @@ class App extends Component {
               onRight={this.onRight}
               onUp={this.onUp}
             />
-            <button onClick={this.toggleLightMode}>Toggle Light Mode</button>
           </div>
-          )}
-          </div>
-        );
-      }
-    }
-    
-    export default App;
+        )}
+      </div>
+    );
+  }
+}
+export default App;  
