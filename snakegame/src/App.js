@@ -3,6 +3,10 @@ import Snake from "./Snake";
 import Food from "./Food";
 import Button from "./Button";
 import Menu from "./Menu";
+import Homepage from './Homepage';
+import Highscore from './Highscoreknapp';
+import StartButton from './Startknapp';
+import ExitButton from './Exitknapp';
 
 const getRandomFood = () => {
   let min = 1;
@@ -374,6 +378,20 @@ class App extends Component {
       </div>
     );
   }
+
+function App() {
+  return (      
+    <main className= "main">
+  <Homepage/>
+    <div className="Menu">
+      <div id="buttons">
+      <StartButton></StartButton>
+      <Highscore/>
+      <ExitButton></ExitButton>
+      </div>
+    </div>
+    </main>
+  );
 }
 
 export default App;  
