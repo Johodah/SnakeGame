@@ -21,5 +21,5 @@ const Button = ({ onUp, onDown, onLeft, onRight }) => {
       </div>
     </div>
   );
-};
+}; 
 export default Button;

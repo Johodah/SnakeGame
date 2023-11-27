@@ -1,0 +1,19 @@
+.settings-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.setting-item {
+  display: flex;
+  align-items: center;
+}
+
+.slider-container {
+  display: flex;
+  align-items: center;
+}
+
+.slider-label {
+  margin-left: 10px;
+}

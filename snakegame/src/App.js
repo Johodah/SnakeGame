@@ -2,9 +2,7 @@ import React, { Component } from "react";
 import Snake from "./Snake";
 import Food from "./Food";
 import Button from "./Button";
-import Menu from "./menu";
-import Popsup from "./Popup";
-
+import Menu from "./Menu";
 
 const getRandomFood = () => {
   let min = 1;
@@ -14,29 +12,46 @@ const getRandomFood = () => {
   return [x, y];
 };
 
-const initialState = {
-  food: getRandomFood(),
-  direction: "RIGHT",
-  speed: 100,
-  route: "menu",
-  snakeDots: [
-    [0, 0],
-    [0, 2],
-  ],
-  score:0
-
-  
-};
-
 class App extends Component {
+  loadLightModePref = () => {
+    const storedPreference = localStorage.getItem("lightMode");
+    return storedPreference ? JSON.parse(storedPreference) : false;
+  };
+
+  saveLightModePref = (isLightMode) => {
+    localStorage.setItem("lightMode", JSON.stringify(isLightMode));
+  };
+
+  loadControls = () => {
+    const storedPreference = localStorage.getItem("controlScheme");
+    return storedPreference || "arrows";
+  };
+
+  saveControls = (controlScheme) => {
+    localStorage.setItem("controlScheme", controlScheme);
+  };
+
   constructor() {
     super();
-    this.state = initialState;
+    this.state = {
+      food: getRandomFood(),
+      direction: "RIGHT",
+      speed: 100,
+      route: "menu",
+      snakeDots: [[0, 0], [0, 2]],
+      lightMode: this.loadLightModePref(),
+      controlScheme: this.loadControls(),
+    };
   }
 
   componentDidMount() {
     setInterval(this.moveSnake, this.state.speed);
     document.onkeydown = this.onKeyDown;
+    document.addEventListener("keydown", this.handleKeyPress);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.handleKeyPress);
   }
 
   componentDidUpdate() {
@@ -46,6 +61,22 @@ class App extends Component {
   }
 
   onKeyDown = (e) => {
+    e = e || window.event;
+    const { controlScheme } = this.state;
+
+    switch (controlScheme) {
+      case "arrows":
+        this.handleArrowKeys(e);
+        break;
+      case "wasd":
+        this.handleWASDKeys(e);
+        break;
+      default:
+        break;    
+    }
+  };
+
+  handleArrowKeys = (e) => {
     e = e || window.event;
     switch (e.keyCode) {
       case 37:
@@ -60,8 +91,58 @@ class App extends Component {
       case 40:
         this.setState({ direction: "DOWN" });
         break;
+      default:
+        break;
     }
   };
+
+  handleWASDKeys = (e) => {
+    e = e || window.event;
+    switch (e.keyCode) {
+      case 65:
+        this.setState({ direction: "LEFT" });
+        break;
+      case 87:
+        this.setState({ direction: "UP" });
+        break;
+      case 68:
+        this.setState({ direction: "RIGHT" });
+        break;
+      case 83:
+        this.setState({ direction: "DOWN" });
+        break;
+      default:
+        break;
+    }
+  };
+
+  handleKeyPress = (e) => {
+    e = e || window.event;
+    const { route, controlScheme } = this.state;
+
+    if (e.keyCode === 27) {
+      this.togglePause();
+    }
+  
+
+  if (e.key === 'l' || e.key === 'L') {
+    this.toggleLightMode();
+  }
+
+  const validControlKeys = ['w', 'a', 's', 'd', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'ArrowDown'];
+  
+  if (validControlKeys.includes(e.key)) {
+    const isOppositeControlScheme = 
+      (controlScheme === 'arrows' && validControlKeys.slice(0, 4).includes(e.key.toLowerCase())) ||
+      (controlScheme === 'wasd' && validControlKeys.slice(4).includes(e.key))
+    
+    
+    if (isOppositeControlScheme) {
+      this.toggleControlScheme();
+    } 
+  }
+};
+
 
   moveSnake = () => {
     let dots = [...this.state.snakeDots];
@@ -79,6 +160,8 @@ class App extends Component {
           break;
         case "UP":
           head = [head[0], head[1] - 2];
+          break;
+        default:
           break;
       }
       dots.push(head);
@@ -118,18 +201,9 @@ class App extends Component {
       });
       this.increaseSnake();
       this.increaseSpeed();
-      this.setState((prevState) => {
-        let newScore = prevState.score + 10;
-        if (newScore >= 100) {
-          newScore -= 5;
-        }
-        localStorage.setItem("score", newScore);
-        return {
-          score: newScore,
-        };
-      });
     }
   }
+
   increaseSnake() {
     let newSnake = [...this.state.snakeDots];
     newSnake.unshift([]);
@@ -151,14 +225,18 @@ class App extends Component {
       route: "game",
     });
   };
+
   gameOver() {
+    alert(`GAME OVER, your score is ${this.state.snakeDots.length - 2}`);
     this.setState({
-      route: "popup",
-      popupScore: this.state.score, // Använd den befintliga poängen
+      food: getRandomFood(),
+      direction: "RIGHT",
+      speed: 100,
+      route: "menu",
+      snakeDots: [[0, 0], [0, 2]],
+      lightMode: this.loadLightModePref(),
     });
   }
-  /** ny function för att skicka in username till popup  */
-  
 
   onDown = () => {
     let dots = [...this.state.snakeDots];
@@ -176,6 +254,7 @@ class App extends Component {
   onUp = () => {
     let dots = [...this.state.snakeDots];
     let head = dots[dots.length - 1];
+
     head = [head[0], head[1] - 2];
     dots.push(head);
     dots.shift();
@@ -211,20 +290,78 @@ class App extends Component {
     });
   };
 
+  toggleLightMode = () => {
+    this.setState(
+      (prevState) => ({
+        lightMode: !prevState.lightMode,
+      }),
+      () => {
+        this.saveLightModePref(this.state.lightMode);
+      }
+    );
+  };
+
+  toggleControlScheme = () => {
+    const newScheme = this.state.controlScheme === "arrows" ? "wasd" : "arrows";
+    this.setState(
+      {
+        controlScheme: newScheme,
+      },
+      () => {
+        this.saveControls(newScheme);
+      }
+    );
+  };
+
+  togglePause = () => {
+    if (this.state.route === "game") {
+      this.setState({
+        route: "paused",
+      });
+    } else if (this.state.route === "paused") {
+      this.setState({
+        route: "game",
+      });
+    }
+  };
+
   render() {
-    const { route, snakeDots, food } = this.state;
+    const { route, snakeDots, food, lightMode, controlScheme } = this.state;
+    const LightMode = lightMode;
+    const ControlButton = controlScheme === "arrows" || controlScheme === "wasd";
+    const GamePaused = route === "menu" || route === "paused";
+
     return (
-      <div>
-      {route === "menu" ? (
-        <Menu onRouteChange={this.onRouteChange} />
-      ) : route === "popup" ? (
-        <Popsup score= {this.state.popupScore}>
-        </Popsup>
-      ) : (
+      <div className={LightMode ? "light-mode" : ""}>
+        <button
+          className={`toggle-light-mode-button ${LightMode ? "light-mode-button" : ""}`}
+          onClick={this.toggleLightMode}
+        >
+          Toggle Light Mode
+        </button>
+
+        <button
+          className={`control-button ${ControlButton ? "" : "light-mode-button"}`} 
+          onClick={this.toggleControlScheme}
+          >
+          {controlScheme === "arrows" ? "Arrow Keys" : "WASD"}
+        </button>
+
+        <button className={`toggle-pause-button ${GamePaused && route === "game" ?  "light-mode-button" : ""}`} 
+          onClick={this.togglePause}
+          >
+          {route === "game" ? "Pause" : "Resume"}
+        </button>
+
+        {route === "menu" ? (
           <div>
-            <div className="game-area">
-              <Snake snakeDots={snakeDots} />
-              <Food dot={food} />
+            <Menu onRouteChange={this.onRouteChange} />
+          </div>
+        ) : (
+          <div>
+            <div className={`game-area ${LightMode ? "light-mode" : ""}`}>
+              <Snake snakeDots={snakeDots} lightMode={LightMode} />
+              <Food dot={food} lightMode={LightMode} />
             </div>
             <Button
               onDown={this.onDown}
@@ -234,11 +371,9 @@ class App extends Component {
             />
           </div>
         )}
-        <div>
-        </div>
       </div>
-      
     );
   }
 }
-export default App;
+
+export default App;  

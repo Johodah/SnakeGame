@@ -1,10 +1,85 @@
 body {
+  background-color: black;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.light-mode body {
+  background-color: white;
+  color: black;
+}
+
+.game-area {
+  position: relative;
+  width: 600px;
+  height: 500px;
+  border: 2px solid red;
+  border-radius: 10px;
+  margin: 50px auto;
+  display: flex;
+  flex-wrap: wrap;
+  box-shadow: 0 0 10px black;
+}
+
+.game-area.light-mode {
+  box-shadow: 0 0 10px white;
+  border: 2px solid red;
+  background-color: white;
+}
+
+.light-mode .light-mode-button {
+  background-color: lightgray;
+  color: black;
+}
+
+.light-mode-button {
+  background-color: darkgray;
+  color: white;
+}
+
+.snake {
+  position: absolute;
+  width: 2%;
+  height: 2%;
+  background-color: red;
+  border: 1px solid white;
+  z-index: 2;
+}
+
+.snake.light-mode {
+  background-color: black;
+  border: 1px solid black;
+}
+
+.food {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background-color: white;
+  border-radius: 20px;
+  z-index: 1;
+}
+
+.food.light-mode {
+  background-color: orange;
+  color: black;
+}
+
+@media only screen and (max-width: 800px) {
+  .game-area {
+    position: relative;
+    width: 350px;
+    height: 300px;
+  }
+
+  .snake {
+    width: 12px;
+    height: 12px;
+  }
 }
 
 code {
