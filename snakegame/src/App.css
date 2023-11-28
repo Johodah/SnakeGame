@@ -1,12 +1,17 @@
-.Menu {
+#Start-Min {
   align-items: center;
   text-align: center;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   margin: 4em;
   padding: 3em;
-
+  border: 1px solid black;
+}
+.Controlls{
+  display: flex;
+  flex-direction: column;
+  width: 10em;
 }
 
 .light-game-area {
@@ -14,7 +19,6 @@
   color: white;
   
 }
-
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -25,12 +29,9 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
-
 .App-link {
   color: #61dafb;
 }
-
-
 
 footer{
   color: white;
@@ -42,6 +43,11 @@ footer{
     bottom: 0;
     width: 100%;
 }
+/* .mainContainer{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+} */
 
 header{
   color: white;

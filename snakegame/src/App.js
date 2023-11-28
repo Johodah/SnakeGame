@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useRef} from "react";
 import Snake from "./Snake";
 import Food from "./Food";
 import Button from "./Button";
@@ -8,6 +8,13 @@ import Homepage from './Homepage';
 import StartButton from './Startknapp';
 import ExitButton from './Exitknapp';
 import Popup from "./Popup";
+import "./App.css";
+import "./index.css";
+import GameComponent from "./GameComp";
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+
+
+
 
 const getRandomFood = () => {
   let min = 1;
@@ -243,7 +250,6 @@ class App extends Component {
   };
 
   gameOver() {
-    // alert(`GAME OVER, your score is ${this.state.snakeDots.length - 2}`);
     this.setState({
       food: getRandomFood(),
       direction: "RIGHT",
@@ -252,12 +258,7 @@ class App extends Component {
       snakeDots: [[0, 0], [0, 2]],
       lightMode: this.loadLightModePref(),
       
-
     });
-    // this.setState({
-    //   route: "Popup",
-    //   popupScore: this.state.score, // Använd den befintliga poängen
-    // });
   }
 
   onDown = () => {
@@ -353,54 +354,56 @@ class App extends Component {
     const GamePaused = route === "menu" || route === "paused";
 
     return (
-      <div className={LightMode ? "light-mode" : ""}>
+      <div className="mainContainer"> 
+        <Homepage />
+        <div className="Controlls">
         <button
           className={`toggle-light-mode-button ${LightMode ? "light-mode-button" : ""}`}
-          onClick={this.toggleLightMode}
+          id ="light" onClick={this.toggleLightMode}
         >
           Toggle Light Mode
         </button>
 
         <button
           className={`control-button ${ControlButton ? "" : "light-mode-button"}`} 
-          onClick={this.toggleControlScheme}
+          id ="constrol"onClick={this.toggleControlScheme}
           >
           {controlScheme === "arrows" ? "Arrow Keys" : "WASD"}
         </button>
 
         <button className={`toggle-pause-button ${GamePaused && route === "game" ?  "light-mode-button" : ""}`} 
-          onClick={this.togglePause}
+          id = "pause"onClick={this.togglePause}
           >
           {route === "game" ? "Pause" : "Resume"}
         </button>
-        <Menu onRouteChange={this.onRouteChange} />
+        
+        </div>
+   
+      <div id="Start-Min" className={LightMode ? "light-mode" : ""}>
+        
         {route === "menu" ? (
-          <div>
-            
-            <Homepage />
             <div id="buttons">
-              <StartButton/>
-              {/* <Highscore/> */}
-              <ExitButton/>
+            <Menu onRouteChange={this.onRouteChange} /> 
+            <ExitButton/>
+              
             </div>
-            {/* {route === "gameover" && <Popup />} */}
-          </div>
+          
+          
         ): route === "Popup" ? (
           <Popup score={this.state.popupScore}/>
-        ) : (
-          <div>
-            <div className={`game-area ${LightMode ? "light-mode" : ""}`}>
-              <Snake snakeDots={snakeDots} lightMode={LightMode} />
-              <Food dot={food} lightMode={LightMode} />
-            </div>
-            <Button
-              onDown={this.onDown}
-              onLeft={this.onLeft}
-              onRight={this.onRight}
-              onUp={this.onUp}
-            />
-          </div>
+        ) : route === "game" && (
+          <GameComponent
+          snakeDots={this.state.snakeDots}
+          food={this.state.food}
+          lightMode={this.state.lightMode}
+          controlScheme={this.state.controlScheme}
+          onDown={this.onDown}
+          onLeft={this.onLeft}
+          onRight={this.onRight}
+          onUp={this.onUp}
+        />
         )}
+      </div>
       </div>
     );
   }
