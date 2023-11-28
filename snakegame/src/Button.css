@@ -20,6 +20,23 @@
     box-shadow: 3px -3px 6px black; /* Adjusted box shadow */
     cursor: pointer;
   }
+  .start{
+    margin: 8px; /* Adjusted margin for tighter spacing */
+    padding: 15px; /* Adjusted padding for larger buttons */
+    border: 1px solid white;
+    color: red;
+    background: black;
+    box-shadow: 3px -3px 6px black; /* Adjusted box shadow */
+    cursor: pointer;
+  }
+  .start:hover{
+    background-color: rgb(235, 227, 231);
+    width: 150px;
+  }
+  button:hover{
+    background-color: rgb(235, 227, 231);
+    width: 150px;
+  }
   
   /* Media query for smaller screens */
   @media (max-width: 600px) {

@@ -23,4 +23,11 @@
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 999;
   }
+  #user_name{
+    border-radius: 10px;
+    height: 40px;
+    width: 200px;
+    text-align: center;
+    
+  }
   

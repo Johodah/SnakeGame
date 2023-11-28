@@ -42,15 +42,7 @@ footer{
     bottom: 0;
     width: 100%;
 }
-button{
-  border-radius: 15px;
-  width: 250px;
-  padding: 10px;
-}
-button:hover{
-  background-color: rgb(110, 112, 112);
-  width: 280px;
-}
+
 header{
   color: white;
   background-color: black;
@@ -60,7 +52,7 @@ header{
   justify-content: center;
   top: 0;
 }
-#buttons{
+/* #buttons{
   background-color: black;
   width: 500px;
   height: 350px;
@@ -70,4 +62,4 @@ header{
   justify-content: center;
   border-radius: 3em;
   
-}
+} */
