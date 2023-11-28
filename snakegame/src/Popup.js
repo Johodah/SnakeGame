@@ -15,7 +15,7 @@ const Popup = () => {
   }, []);
   const handleUserName = (e) => {
     setUsername(e.target.value);//funktion som jag ska använda för att spara username i UseState() 
-    //jag använder setusername för att uppdatera värdet på username direkt 
+    //jag använder setusername för att uppdatera värdet på username direkt
   };
   const handleSaveScore = () => {
     if(!buttonhasClicked){

@@ -641,21 +641,21 @@ class App extends Component {
   };
 
   gameOver() {
-    alert(`GAME OVER, your score is ${this.state.snakeDots.length - 2}`);
+    // alert(`GAME OVER, your score is ${this.state.snakeDots.length - 2}`);
     this.setState({
       food: getRandomFood(),
       direction: "RIGHT",
       speed: 100,
-      route: "gameover",
+      route: "Popup",
       snakeDots: [[0, 0], [0, 2]],
       lightMode: this.loadLightModePref(),
       
 
     });
-    this.setState({
-      route: "popup",
-      popupScore: this.state.score, // Använd den befintliga poängen
-    });
+    // this.setState({
+    //   route: "Popup",
+    //   popupScore: this.state.score, // Använd den befintliga poängen
+    // });
   }
 
   onDown = () => {
@@ -781,8 +781,10 @@ class App extends Component {
               {/* <Highscore/> */}
               <ExitButton/>
             </div>
-            {route === "gameover" && <Popup />}
+            {/* {route === "gameover" && <Popup />} */}
           </div>
+        ): route === "Popup" ? (
+          <Popup score={this.state.popupScore}/>
         ) : (
           <div>
             <div className={`game-area ${LightMode ? "light-mode" : ""}`}>
