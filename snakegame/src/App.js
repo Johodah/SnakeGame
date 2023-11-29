@@ -385,13 +385,16 @@ class App extends Component {
             <div id="buttons">
             <Menu onRouteChange={this.onRouteChange} /> 
             <ExitButton/>
-              
             </div>
           
-          
+        
         ): route === "Popup" ? (
           <Popup score={this.state.popupScore}/>
-        ) : route === "game" && (
+        // ) : route === "game" && (
+          
+        ) : (
+            
+            
           <GameComponent
           snakeDots={this.state.snakeDots}
           food={this.state.food}
@@ -402,6 +405,7 @@ class App extends Component {
           onRight={this.onRight}
           onUp={this.onUp}
         />
+        
         )}
       </div>
       </div>

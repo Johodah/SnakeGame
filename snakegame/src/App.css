@@ -1,3 +1,7 @@
+.mainContainer {
+  height: 100vh;
+  overflow: hidden; /* To prevent scrolling */
+}
 #Start-Min {
   align-items: center;
   text-align: center;
@@ -48,7 +52,6 @@ footer{
   flex-direction: column;
   justify-content: space-between;
 } */
-
 header{
   color: white;
   background-color: black;

@@ -15,11 +15,12 @@ const GameComponent = ({
 }) => {
   return (
     <div>
+      <Button onDown={onDown} onLeft={onLeft} onRight={onRight} onUp={onUp} />
       <div className={`game-area ${lightMode ? "light-mode" : ""}`}>
         <Snake snakeDots={snakeDots} lightMode={lightMode} />
         <Food dot={food} lightMode={lightMode} />
       </div>
-      <Button onDown={onDown} onLeft={onLeft} onRight={onRight} onUp={onUp} />
+      
     </div>
   );
 };
