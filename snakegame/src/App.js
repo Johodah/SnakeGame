@@ -418,20 +418,6 @@ class App extends Component {
     );
   }
 };
-export default App;  
-// function App() {
-//   return (      
-//     <main className= "main">
-//   <Homepage/>
-//     <div className="Menu">
-//       <div id="buttons">
-//       <StartButton></StartButton>
-//       <Highscore/>
-//       <ExitButton></ExitButton>
-//       </div>
-//     </div>
-//     </main>
-//   );
-// }
+export default App;
 
 
