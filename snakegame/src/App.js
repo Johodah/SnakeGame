@@ -347,6 +347,12 @@ class App extends Component {
     }
   };
 
+  handleHighscoreSubmit = () => {
+    this.setState({
+      route: "menu",
+    })
+  };
+
   render() {
     const { route, snakeDots, food, lightMode, controlScheme } = this.state;
     const LightMode = lightMode;
@@ -388,8 +394,8 @@ class App extends Component {
             </div>
           
         
-        ): route === "Popup" ? (
-          <Popup score={this.state.popupScore}/>
+        ):  route === "Popup" ? (
+          <Popup score={this.state.popupScore} onHighscoreSubmit={this.handleHighscoreSubmit}/>
         // ) : route === "game" && (
           
         ) : (
