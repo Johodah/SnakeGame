@@ -1,17 +1,11 @@
-import React, { Component, useRef} from "react";
-import Snake from "./Snake";
-import Food from "./Food";
-import Button from "./Button";
+import React, { Component, } from "react";
 import Menu from "./menu";
 import Homepage from './Homepage';
-// import Highscore from './Highscoreknapp';
-import StartButton from './Startknapp';
 import ExitButton from './Exitknapp';
 import Popup from "./Popup";
 import "./App.css";
 import "./index.css";
 import GameComponent from "./GameComp";
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 
 
 
@@ -203,7 +197,7 @@ class App extends Component {
       }
     });
   }
-
+// hur ormen växer och hur hur detta påverkar ormens fart och storlek 
   onSnakeEats() {
     let head = this.state.snakeDots[this.state.snakeDots.length - 1];
     let food = this.state.food;
@@ -248,7 +242,8 @@ class App extends Component {
       route: "game",
     });
   };
-
+// Game Over när spelet är slut så ska vi blir skickade till popup så att användaren ska kunna skriva sitt 
+//namn och spara sin score 
   gameOver() {
     this.setState({
       food: getRandomFood(),
@@ -260,7 +255,7 @@ class App extends Component {
       
     });
   }
-
+// directions For the snake movement 
   onDown = () => {
     let dots = [...this.state.snakeDots];
     let head = dots[dots.length - 1];
@@ -322,7 +317,7 @@ class App extends Component {
       }
     );
   };
-
+// den funktionen kollar om användaren spelar med WASD eller med Arrows  
   toggleControlScheme = () => {
     const newScheme = this.state.controlScheme === "arrows" ? "wasd" : "arrows";
     this.setState(
@@ -334,7 +329,7 @@ class App extends Component {
       }
     );
   };
-
+//funcktion för att pusa spelet 
   togglePause = () => {
     if (this.state.route === "game") {
       this.setState({
@@ -346,10 +341,10 @@ class App extends Component {
       });
     }
   };
-
+//skapar en funktion för att sedan skicka den som argument till popup component så att vi går tillbaka till start sidan 
   handleHighscoreSubmit = () => {
     this.setState({
-      route: "menu",
+      route: "menu",// därför route här är menu "start menu"
     })
   };
 

@@ -27,7 +27,8 @@ const Popup = ({onHighscoreSubmit}) => {
     console.log(updatedScores);
     localStorage.setItem("scores", JSON.stringify(updatedScores));
     setbuttonhasClicked(true);// jag disable button från att klickas på eftersom du har redan sparat ditt namn & poängen.
-    onHighscoreSubmit();
+    onHighscoreSubmit();// här har vi fixat en funktion för att skicka tillbaka hos till start menu
+    //efter att vi har skickat in rätt data med username. 
     }else{
       alert("Please enter username");
     }
@@ -69,78 +70,3 @@ const Popup = ({onHighscoreSubmit}) => {
   );
 };
 export default Popup;
-
-/**
- * skapat en component  för popup 
- * skapa en togglepopup för att stänga och öppna popup
- * popup ska visa namnet på spelaren och dess poäng som de fick
- * import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-const superSeriousAuthentication = {
-  isAuthenticated: false,
-  login: () => {
-    superSeriousAuthentication.isAuthenticated = true;
-  },
-  logout: () => {
-    superSeriousAuthentication.isAuthenticated = false;
-  }
-};
-const Home = () => <h2>Home</h2>;
-const Dashboard = ({ setIsAuthenticated }) => (
-  <div>
-    <h2>Dashboard</h2>
-    <button onClick={() => {
-      superSeriousAuthentication.logout();
-      setIsAuthenticated(false);
-    }}>Logout</button>
-  </div>
-);
-const Login = ({ setIsAuthenticated }) => (
-  <div>
-    <h2>Login</h2>
-    <button
-      onClick={() => {
-        superSeriousAuthentication.login();
-        setIsAuthenticated(true);
-      }}
-    >
-      Login
-    </button>
-  </div>
-);
-const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(superSeriousAuthentication.isAuthenticated);
-  return (
-    <Router>
-      <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/dashboard">Dashboard</Link>
-            </li>
-          </ul>
-        </nav>
-        <hr />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route
-            path="/dashboard"
-            element={
-              isAuthenticated ? (
-                <Dashboard setIsAuthenticated={setIsAuthenticated} />
-              ) : (
-                <Login setIsAuthenticated={setIsAuthenticated} />
-              )
-            }
-          />
-        </Routes>
-      </div>
-    </Router>
-  );
-};
-export default App;
-
- */
