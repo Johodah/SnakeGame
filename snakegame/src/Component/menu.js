@@ -1,9 +1,8 @@
 import React from "react";
 import "./Button.css";
-import "./App.css"
-import App from "./App"
+import "../App.css"
 
-const Start = ({ onRouteChange }) => {
+const Menu = ({ onRouteChange }) => {
     return (
         <div className="wrapper">
             <div>
@@ -19,4 +18,4 @@ const Start = ({ onRouteChange }) => {
     );
 };
 
-export default Start;
+export default Menu;
