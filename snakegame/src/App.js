@@ -384,7 +384,7 @@ class App extends Component {
         </button>
         
         </div>
-   
+
       <div id="Start-Min" className={LightMode ? "light-mode" : ""}>
         
         {route === "menu" ? (
